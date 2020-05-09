@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
 
-import FakeUsersRepository from '../repositories/FakeUsersRepository';
+import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
 import CreateUserService from './CreateUserService';
@@ -43,7 +43,7 @@ describe('CreateUser', () => {
       fakeHashProvider,
     );
 
-    expect(
+    await expect(
       authenticateUser.execute({
         email: 'johndoe@example.com',
         password: '123456',
@@ -59,6 +59,7 @@ describe('CreateUser', () => {
       fakeUsersRepository,
       fakeHashProvider,
     );
+
     const authenticateUser = new AuthenticateUserService(
       fakeUsersRepository,
       fakeHashProvider,
@@ -70,7 +71,7 @@ describe('CreateUser', () => {
       password: '123456',
     });
 
-    expect(
+    await expect(
       authenticateUser.execute({
         email: 'johndoe@example.com',
         password: 'wrong-password',
