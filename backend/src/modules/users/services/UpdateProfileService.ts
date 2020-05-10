@@ -5,7 +5,6 @@ import IHashProvider from '@modules/users/providers/HashProvider/models/IHashPro
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 
 import User from '@modules/users/infra/typeorm/entities/User';
-import { urlencoded } from 'express';
 
 interface IRequest {
   user_id: string;
@@ -55,8 +54,8 @@ class UpdateProfileService {
       }
 
       const isOldPasswordCorrect = await this.hashProvider.compareHash(
-        user.password,
         old_password,
+        user.password,
       );
 
       if (!isOldPasswordCorrect) {
