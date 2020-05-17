@@ -7,12 +7,11 @@ import cors from 'cors';
 
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
-import createConnection from '@shared/infra/typeorm';
+import '@shared/infra/typeorm';
 import routes from './routes';
 
 import '@shared/container';
 
-createConnection();
 const app = express();
 
 app.use(cors());
