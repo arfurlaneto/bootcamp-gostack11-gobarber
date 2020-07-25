@@ -15,8 +15,9 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
 
+import RNFetchBlob from 'rn-fetch-blob';
 import { useAuth } from '../../hooks/auth';
-import api from '../../services/api';
+import api, { baseURLify } from '../../services/api';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -40,7 +41,7 @@ interface ProfileFormData {
 }
 
 const Profile: React.FC = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, getToken } = useAuth();
 
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
@@ -126,20 +127,34 @@ const Profile: React.FC = () => {
           return;
         }
 
-        const data = new FormData();
-
-        data.append('avatar', {
-          type: 'image/jpeg',
-          name: `${user.id}.jpg`,
-          uri: response.uri,
-        });
-
-        api.patch('/users/avatar', data).then((apiResponse) => {
-          updateUser(apiResponse.data);
-        });
+        RNFetchBlob.fetch(
+          'POST',
+          baseURLify('/users/avatar'),
+          {
+            Authorization: getToken(),
+            'Content-Type': 'multipart/form-data',
+          },
+          [
+            {
+              name: 'avatar',
+              filename: response.fileName,
+              type: response.type,
+              data: RNFetchBlob.wrap(response.uri),
+            },
+          ],
+        )
+          .then((apiResponse) => {
+            updateUser(JSON.parse(apiResponse.data));
+          })
+          .catch(() => {
+            Alert.alert(
+              'Erro na atualização da foto',
+              'Ocorreu um erro ao atualizar seu perfil, tente novamente.',
+            );
+          });
       },
     );
-  }, [updateUser, user.id]);
+  }, [updateUser, getToken]);
 
   const handleGoBack = useCallback(() => {
     navigation.goBack();

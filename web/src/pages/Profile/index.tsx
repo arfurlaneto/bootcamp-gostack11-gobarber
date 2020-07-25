@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, FormEvent, ChangeEvent } from 'react';
+import React, { useCallback, useRef, ChangeEvent } from 'react';
 import { FiMail, FiUser, FiLock, FiCamera, FiArrowLeft } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -104,7 +104,7 @@ const Profile: React.FC = () => {
 
         data.append('avatar', e.target.files[0]);
 
-        api.patch('/users/avatar', data).then((response) => {
+        api.post('/users/avatar', data).then((response) => {
           updateUser(response.data);
           addToast({
             type: 'success',
