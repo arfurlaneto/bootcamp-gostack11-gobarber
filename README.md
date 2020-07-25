@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="/.github/cover.png">
+</p>
+
 # 🪒 GoBarber
 A barber appointment app developed at Rocketseat's GoStack Bootcamp.
 
